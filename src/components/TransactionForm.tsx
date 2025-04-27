@@ -44,7 +44,7 @@ interface TransactionFormProps {
 export default function TransactionForm({ onSave, transaction, onCancel }: TransactionFormProps) {
   // State to track whether the current transaction is an expense or income
   // State to track whether the current transaction is an expense or income
-  // This state value is used to update the form field and for UI rendering
+  // This state value is used in the UI to show relevant transaction type styles
   const [isExpenseState, setIsExpenseState] = useState(true);
 
   // Initialize the form with useForm hook
@@ -81,7 +81,7 @@ export default function TransactionForm({ onSave, transaction, onCancel }: Trans
       }
     });
     return () => subscription.unsubscribe();
-  }, [form.watch]);
+  }, [form, form.watch]);
 
   // Form submission handler
   function onSubmit(values: TransactionFormData) {
@@ -106,7 +106,11 @@ export default function TransactionForm({ onSave, transaction, onCancel }: Trans
           control={form.control}
           name="isExpense"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+            <FormItem
+              className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"
+              data-active={isExpenseState ? 'expense' : 'income'}
+              style={{ borderColor: isExpenseState ? 'var(--destructive)' : 'var(--primary)', opacity: 0.8 }}
+            >
               <div className="space-y-0.5">
                 <FormLabel>
                   {field.value ? (

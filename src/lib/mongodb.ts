@@ -9,10 +9,7 @@ interface CachedConnection {
   promise: Promise<mongoose.Mongoose> | null;
 }
 
-interface GlobalWithMongoose {
-  mongoose?: CachedConnection;
-  mongoMemoryServer?: MongoMemoryServer | null;
-}
+// Declare interfaces and types to help with TypeScript type checking
 
 // Using TypeScript declaration merging to add our properties to the global type
 declare global {
@@ -23,7 +20,7 @@ declare global {
 }
 
 // Use cached connection if available to prevent multiple connections during development
-let cached = global.mongoose || { conn: null, promise: null };
+const cached = global.mongoose || { conn: null, promise: null };
 
 // If no cached connection exists, create one and store it on the global object
 if (!global.mongoose) {
