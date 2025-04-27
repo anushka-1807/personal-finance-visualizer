@@ -8,17 +8,10 @@ function isValidObjectId(id: string) {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
-// Define the interface for route parameters
-interface RouteParams {
-  params: {
-    id: string;
-  };
-}
-
 // GET route to fetch a single budget by ID
 export async function GET(
-  req: NextRequest,
-  { params }: RouteParams
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
     // Connect to the database
@@ -57,8 +50,8 @@ export async function GET(
 
 // PUT route to update a budget
 export async function PUT(
-  req: NextRequest,
-  { params }: RouteParams
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
     // Connect to the database
@@ -75,7 +68,7 @@ export async function PUT(
     }
 
     // Parse request body
-    const body = await req.json();
+    const body = await request.json();
 
     // Validate required fields
     if (!body.category || !body.amount || !body.month) {
@@ -137,8 +130,8 @@ export async function PUT(
 
 // DELETE route to remove a budget
 export async function DELETE(
-  req: NextRequest,
-  { params }: RouteParams
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
     // Connect to the database
