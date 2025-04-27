@@ -83,7 +83,7 @@ export default function BudgetVsActualChart({ transactions, budgets, month }: Bu
     try {
       const date = parse(month, 'yyyy-MM', new Date());
       return format(date, 'MMMM yyyy');
-    } catch (error) {
+    } catch (_) {
       return month;
     }
   }, [month]);
@@ -99,7 +99,23 @@ export default function BudgetVsActualChart({ transactions, budgets, month }: Bu
   };
 
   // Custom tooltip for the chart
-  const CustomTooltip = ({ active, payload }: any) => {
+  interface TooltipProps {
+    active?: boolean;
+    payload?: {
+      payload: {
+        category: string;
+        budgeted: number;
+        actual: number;
+        status: string;
+        overBudget?: number;
+        underBudget?: number;
+        remaining?: number;
+        percentUsed?: number;
+      };
+    }[];
+  }
+
+  const CustomTooltip = ({ active, payload }: TooltipProps) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -108,12 +124,12 @@ export default function BudgetVsActualChart({ transactions, budgets, month }: Bu
           <p className="text-sm">Budgeted: ${data.budgeted.toFixed(2)}</p>
           <p className="text-sm">Actual: ${data.actual.toFixed(2)}</p>
           {data.status === 'over' ? (
-            <p className="text-sm text-destructive">Over budget by: ${data.overBudget.toFixed(2)}</p>
+            <p className="text-sm text-destructive">Over budget by: ${data.overBudget?.toFixed(2)}</p>
           ) : (
-            <p className="text-sm text-muted-foreground">Remaining: ${data.remaining.toFixed(2)}</p>
+            <p className="text-sm text-muted-foreground">Remaining: ${data.remaining?.toFixed(2)}</p>
           )}
           <p className="text-sm font-semibold mt-1">
-            {data.percentUsed}% of budget used
+            {data.percentUsed ?? 0}% of budget used
           </p>
         </div>
       );

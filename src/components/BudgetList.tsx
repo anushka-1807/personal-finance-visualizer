@@ -50,7 +50,7 @@ export default function BudgetList({ budgets, onRefresh }: BudgetListProps) {
     try {
       const date = parse(monthStr, 'yyyy-MM', new Date());
       return format(date, 'MMMM yyyy');
-    } catch (error) {
+    } catch (_) {
       return monthStr; // Fallback to original string
     }
   };
@@ -90,7 +90,7 @@ export default function BudgetList({ budgets, onRefresh }: BudgetListProps) {
   };
 
   // Handle saving a new or updated budget
-  const handleSaveBudget = async (formData: any) => {
+  const handleSaveBudget = async (formData: Omit<Budget, '_id' | 'createdAt' | 'updatedAt'>) => {
     try {
       // Determine if this is an update or create operation
       const isUpdate = selectedBudget !== null;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -8,9 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { TRANSACTION_CATEGORIES } from '@/models/Transaction';
+import { TRANSACTION_CATEGORIES, TransactionCategory } from '@/models/Transaction';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
+import { Budget } from '@/models/Budget';
 
 // Form schema with validation
 const formSchema = z.object({
@@ -20,18 +21,21 @@ const formSchema = z.object({
   notes: z.string().optional(),
 });
 
+type BudgetFormData = Omit<Budget, '_id' | 'createdAt' | 'updatedAt'>;
+
 interface BudgetFormProps {
-  onSave: (data: any) => void;
-  budget?: any | null;
+  onSave: (data: BudgetFormData) => void;
+  budget?: Budget | null;
   onCancel: () => void;
 }
 
 export default function BudgetForm({ onSave, budget, onCancel }: BudgetFormProps) {
   // Get current month in YYYY-MM format
   const currentMonth = format(new Date(), 'yyyy-MM');
+  const [selectedMonth, setSelectedMonth] = useState<string>(budget?.month ?? currentMonth);
 
   // Initialize the form with useForm hook
-  const form = useForm({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       category: '',
@@ -54,8 +58,15 @@ export default function BudgetForm({ onSave, budget, onCancel }: BudgetFormProps
   }, [budget, form]);
 
   // Form submission handler
-  function onSubmit(values: any) {
-    onSave(values);
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Convert form values to BudgetFormData
+    const budgetData: BudgetFormData = {
+      category: values.category as TransactionCategory,
+      amount: values.amount,
+      month: values.month,
+      notes: values.notes
+    };
+    onSave(budgetData);
     if (!budget) {
       form.reset({
         category: '',
