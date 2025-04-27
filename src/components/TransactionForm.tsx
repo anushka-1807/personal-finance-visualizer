@@ -10,12 +10,11 @@ import { Input } from '@/components/ui/input';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { CalendarIcon, DollarSign, TrendingDown, TrendingUp } from 'lucide-react';
+import { CalendarIcon, TrendingDown, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TRANSACTION_CATEGORIES, TransactionCategory } from '@/models/Transaction';
+import { TRANSACTION_CATEGORIES } from '@/models/Transaction';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 
 // Form schema with validation
 const formSchema = z.object({
@@ -27,17 +26,26 @@ const formSchema = z.object({
 });
 
 // Define form data type based on the schema
-type FormData = z.infer<typeof formSchema>;
+type TransactionFormData = z.infer<typeof formSchema>;
 
 interface TransactionFormProps {
-  onSave: (data: any) => void;
-  transaction?: any | null;
+  onSave: (data: TransactionFormData) => void;
+  transaction?: {
+    _id?: string;
+    amount: number;
+    date: string | Date;
+    description: string;
+    category: string;
+    isExpense: boolean;
+  } | null;
   onCancel: () => void;
 }
 
 export default function TransactionForm({ onSave, transaction, onCancel }: TransactionFormProps) {
   // State to track whether the current transaction is an expense or income
-  const [isExpense, setIsExpense] = useState(true);
+  // State to track whether the current transaction is an expense or income
+  // This state value is used to update the form field and for UI rendering
+  const [isExpenseState, setIsExpenseState] = useState(true);
 
   // Initialize the form with useForm hook
   const form = useForm({
@@ -54,7 +62,7 @@ export default function TransactionForm({ onSave, transaction, onCancel }: Trans
   // Set form values when editing a transaction
   useEffect(() => {
     if (transaction) {
-      setIsExpense(transaction.isExpense !== false); // In case isExpense is undefined
+      setIsExpenseState(transaction.isExpense !== false); // In case isExpense is undefined
       form.reset({
         amount: transaction.amount,
         date: new Date(transaction.date),
@@ -69,14 +77,14 @@ export default function TransactionForm({ onSave, transaction, onCancel }: Trans
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
       if (name === 'isExpense') {
-        setIsExpense(value.isExpense !== false);
+        setIsExpenseState(value.isExpense !== false);
       }
     });
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
   // Form submission handler
-  function onSubmit(values: any) {
+  function onSubmit(values: TransactionFormData) {
     onSave(values);
     if (!transaction) {
       form.reset({
@@ -86,7 +94,7 @@ export default function TransactionForm({ onSave, transaction, onCancel }: Trans
         category: 'Other',
         isExpense: true,
       });
-      setIsExpense(true);
+      setIsExpenseState(true);
     }
   }
 

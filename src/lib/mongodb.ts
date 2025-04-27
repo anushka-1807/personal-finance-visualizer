@@ -4,20 +4,33 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 // Check for production MongoDB URI
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// Add this to make TypeScript happy with the global mongoose and MongoMemoryServer type
+interface CachedConnection {
+  conn: mongoose.Connection | null;
+  promise: Promise<mongoose.Mongoose> | null;
+}
+
+interface GlobalWithMongoose {
+  mongoose?: CachedConnection;
+  mongoMemoryServer?: MongoMemoryServer | null;
+}
+
+// Using TypeScript declaration merging to add our properties to the global type
 declare global {
-  var mongoose: any;
-  var mongoMemoryServer: MongoMemoryServer | null;
+  // eslint-disable-next-line no-var
+  var mongoose: CachedConnection | undefined;
+  // eslint-disable-next-line no-var
+  var mongoMemoryServer: MongoMemoryServer | null | undefined;
 }
 
 // Use cached connection if available to prevent multiple connections during development
-let cached = global.mongoose;
+let cached = global.mongoose || { conn: null, promise: null };
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+// If no cached connection exists, create one and store it on the global object
+if (!global.mongoose) {
+  global.mongoose = cached;
 }
 
-async function connectToDatabase() {
+async function connectToDatabase(): Promise<mongoose.Connection> {
   if (cached.conn) {
     return cached.conn;
   }
@@ -52,6 +65,10 @@ async function connectToDatabase() {
       }
       
       // Get the connection string for the in-memory server
+      if (!global.mongoMemoryServer) {
+        throw new Error('Failed to create MongoDB Memory Server');
+      }
+      
       const mongoUri = global.mongoMemoryServer.getUri();
       console.log('Connecting to MongoDB Memory Server:', mongoUri);
       
@@ -68,7 +85,8 @@ async function connectToDatabase() {
   }
 
   try {
-    cached.conn = await cached.promise;
+    const mongooseInstance = await cached.promise;
+    cached.conn = mongooseInstance.connection;
     return cached.conn;
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
