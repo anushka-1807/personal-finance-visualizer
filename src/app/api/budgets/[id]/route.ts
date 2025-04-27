@@ -8,17 +8,24 @@ function isValidObjectId(id: string) {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
+// Define the context type for the route params
+type RouteContext = {
+  params: { id: string }
+}
+
 // GET route to fetch a single budget by ID
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
     // Connect to the database
     await connectToDatabase();
 
+    const { id } = context.params;
+    
     // Validate the ID format
-    if (!isValidObjectId(params.id)) {
+    if (!isValidObjectId(id)) {
       return NextResponse.json(
         { error: 'Invalid budget ID format' },
         { status: 400 }
@@ -26,7 +33,7 @@ export async function GET(
     }
 
     // Find the budget by ID
-    const budget = await Budget.findById(params.id);
+    const budget = await Budget.findById(id);
 
     // Check if budget exists
     if (!budget) {
@@ -49,14 +56,16 @@ export async function GET(
 // PUT route to update a budget
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
     // Connect to the database
     await connectToDatabase();
-
+    
+    const { id } = context.params;
+    
     // Validate the ID format
-    if (!isValidObjectId(params.id)) {
+    if (!isValidObjectId(id)) {
       return NextResponse.json(
         { error: 'Invalid budget ID format' },
         { status: 400 }
@@ -79,7 +88,7 @@ export async function PUT(
       const existingBudget = await Budget.findOne({
         category: body.category,
         month: body.month,
-        _id: { $ne: params.id }
+        _id: { $ne: id }
       });
 
       if (existingBudget) {
@@ -92,7 +101,7 @@ export async function PUT(
 
     // Find and update the budget
     const updatedBudget = await Budget.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: body },
       { new: true, runValidators: true }
     );
@@ -127,14 +136,16 @@ export async function PUT(
 // DELETE route to remove a budget
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
     // Connect to the database
     await connectToDatabase();
-
+    
+    const { id } = context.params;
+    
     // Validate the ID format
-    if (!isValidObjectId(params.id)) {
+    if (!isValidObjectId(id)) {
       return NextResponse.json(
         { error: 'Invalid budget ID format' },
         { status: 400 }
@@ -142,7 +153,7 @@ export async function DELETE(
     }
 
     // Find and delete the budget
-    const deletedBudget = await Budget.findByIdAndDelete(params.id);
+    const deletedBudget = await Budget.findByIdAndDelete(id);
 
     // Check if budget exists
     if (!deletedBudget) {
