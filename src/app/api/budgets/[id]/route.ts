@@ -8,21 +8,23 @@ function isValidObjectId(id: string) {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
-// Define the context type for the route params
-type RouteContext = {
-  params: { id: string }
+// Define the interface for route parameters
+interface RouteParams {
+  params: {
+    id: string;
+  };
 }
 
 // GET route to fetch a single budget by ID
 export async function GET(
   req: NextRequest,
-  context: RouteContext
+  { params }: RouteParams
 ) {
   try {
     // Connect to the database
     await connectToDatabase();
 
-    const { id } = context.params;
+    const { id } = params;
     
     // Validate the ID format
     if (!isValidObjectId(id)) {
@@ -56,13 +58,13 @@ export async function GET(
 // PUT route to update a budget
 export async function PUT(
   req: NextRequest,
-  context: RouteContext
+  { params }: RouteParams
 ) {
   try {
     // Connect to the database
     await connectToDatabase();
     
-    const { id } = context.params;
+    const { id } = params;
     
     // Validate the ID format
     if (!isValidObjectId(id)) {
@@ -136,13 +138,13 @@ export async function PUT(
 // DELETE route to remove a budget
 export async function DELETE(
   req: NextRequest,
-  context: RouteContext
+  { params }: RouteParams
 ) {
   try {
     // Connect to the database
     await connectToDatabase();
     
-    const { id } = context.params;
+    const { id } = params;
     
     // Validate the ID format
     if (!isValidObjectId(id)) {
