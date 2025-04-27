@@ -1,0 +1,183 @@
+/* Custom theme variables for Personal Finance Visualizer */
+:root {
+  /* Brand colors */
+  --brand-primary: 111 74 217; /* Indigo */
+  --brand-secondary: 46 204 113; /* Green */
+  --brand-accent: 255 130 46; /* Orange */
+  
+  /* Status colors */
+  --status-income: 46 204 113; /* Green */
+  --status-expense: 235 87 87; /* Red */
+  --status-warning: 255 176 46; /* Amber */
+  
+  /* Chart colors */
+  --chart-blue: 111 74 217;
+  --chart-green: 46 204 113;
+  --chart-orange: 255 130 46;
+  --chart-purple: 156 39 176;
+  --chart-teal: 0 188 212;
+  --chart-pink: 233 30 99;
+  --chart-brown: 121 85 72;
+  --chart-grey: 158 158 158;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, rgb(var(--brand-primary)), rgb(var(--brand-primary)/0.7));
+  --gradient-income: linear-gradient(135deg, rgb(var(--status-income)), rgb(var(--status-income)/0.7));
+  --gradient-expense: linear-gradient(135deg, rgb(var(--status-expense)), rgb(var(--status-expense)/0.7));
+  
+  /* Add these to your existing light theme */
+  --background: 255 255 255;
+  --foreground: 20 20 20;
+  --card: 255 255 255;
+  --card-foreground: 20 20 20;
+  --popover: 255 255 255;
+  --popover-foreground: 20 20 20;
+  --primary: var(--brand-primary);
+  --primary-foreground: 255 255 255;
+  --secondary: 243 244 246;
+  --secondary-foreground: 20 20 20;
+  --muted: 243 244 246;
+  --muted-foreground: 115 115 115;
+  --accent: var(--brand-accent);
+  --accent-foreground: 255 255 255;
+  --destructive: 239 68 68;
+  --destructive-foreground: 255 255 255;
+  --border: 229 231 235;
+  --input: 229 231 235;
+  --ring: var(--brand-primary);
+  
+  /* Animation variables */
+  --transition-standard: 0.2s ease-in-out;
+  --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --card-shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.dark {
+  --background: 15 15 15;
+  --foreground: 250 250 250;
+  --card: 30 30 30;
+  --card-foreground: 250 250 250;
+  --popover: 30 30 30;
+  --popover-foreground: 250 250 250;
+  --primary: var(--brand-primary);
+  --primary-foreground: 255 255 255;
+  --secondary: 38 38 38;
+  --secondary-foreground: 250 250 250;
+  --muted: 38 38 38;
+  --muted-foreground: 150 150 150;
+  --accent: var(--brand-accent);
+  --accent-foreground: 255 255 255;
+  --destructive: 239 68 68;
+  --destructive-foreground: 250 250 250;
+  --border: 45 45 45;
+  --input: 45 45 45;
+  --ring: var(--brand-primary);
+}
+
+/* Custom component styles */
+.card-hover-effect {
+  transition: transform var(--transition-standard), box-shadow var(--transition-standard);
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.dashboard-card {
+  border-radius: 1rem;
+  box-shadow: var(--card-shadow);
+  transition: all var(--transition-standard);
+}
+
+.dashboard-card:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+.income-text {
+  color: rgb(var(--status-income));
+}
+
+.expense-text {
+  color: rgb(var(--status-expense));
+}
+
+.warning-text {
+  color: rgb(var(--status-warning));
+}
+
+.budget-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  background-color: rgb(var(--secondary));
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+
+.budget-progress-bar-inner {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+}
+
+.budget-under {
+  background-color: rgb(var(--status-income));
+}
+
+.budget-warning {
+  background-color: rgb(var(--status-warning));
+}
+
+.budget-over {
+  background-color: rgb(var(--status-expense));
+}
+
+/* Page header styling */
+.page-header {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+}
+
+.page-header:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: rgb(var(--brand-primary));
+  border-radius: 2px;
+}
+
+/* Animation classes */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive grid layouts */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
