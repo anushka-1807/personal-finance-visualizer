@@ -2,6 +2,12 @@
 
 A comprehensive personal finance tracking application built with Next.js, React, shadcn/ui, Recharts, and MongoDB. This application helps you manage your finances by tracking transactions, analyzing spending patterns, setting budgets, and providing visual insights into your financial health.
 
+## 🚀 Live Demo
+
+**[View Live Demo](https://personal-finance-visualizer-alpha-eight.vercel.app/)**
+
+*Replace the URL above with your actual Vercel deployment URL.*
+
 ![Personal Finance Visualizer](https://via.placeholder.com/800x400?text=Personal+Finance+Visualizer)
 
 ## ✨ Features
