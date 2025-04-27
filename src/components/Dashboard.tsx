@@ -1,10 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign, TrendingDown, TrendingUp, CreditCard, ArrowUpCircle, ArrowDownCircle, PiggyBank, BarChart4, CalendarDays } from 'lucide-react';
-import { format } from 'date-fns';
-import { TRANSACTION_CATEGORIES, TransactionCategory } from '@/models/Transaction';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, PiggyBank, BarChart4, CalendarDays } from 'lucide-react';
+// Date formatting is done within other components
+import { TransactionCategory } from '@/models/Transaction';
 
 interface Transaction {
   amount: number;

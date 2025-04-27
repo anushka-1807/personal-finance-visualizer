@@ -50,7 +50,7 @@ export default function BudgetList({ budgets, onRefresh }: BudgetListProps) {
     try {
       const date = parse(monthStr, 'yyyy-MM', new Date());
       return format(date, 'MMMM yyyy');
-    } catch (_) {
+    } catch {
       return monthStr; // Fallback to original string
     }
   };

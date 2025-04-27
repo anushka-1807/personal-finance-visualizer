@@ -32,7 +32,6 @@ interface BudgetFormProps {
 export default function BudgetForm({ onSave, budget, onCancel }: BudgetFormProps) {
   // Get current month in YYYY-MM format
   const currentMonth = format(new Date(), 'yyyy-MM');
-  const [selectedMonth, setSelectedMonth] = useState<string>(budget?.month ?? currentMonth);
 
   // Initialize the form with useForm hook
   const form = useForm<z.infer<typeof formSchema>>({

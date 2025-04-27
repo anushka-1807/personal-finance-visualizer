@@ -83,7 +83,7 @@ export default function BudgetVsActualChart({ transactions, budgets, month }: Bu
     try {
       const date = parse(month, 'yyyy-MM', new Date());
       return format(date, 'MMMM yyyy');
-    } catch (_) {
+    } catch {
       return month;
     }
   }, [month]);
