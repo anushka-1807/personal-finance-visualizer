@@ -37,7 +37,7 @@ A comprehensive personal finance tracking application built with Next.js, React,
 
 ### Frontend
 - **Framework**: [Next.js 15](https://nextjs.org/) with App Router
-- **UI Library**: [React 19](https://react.dev/)
+- **UI Library**: [React 18](https://react.dev/)
 - **Component Library**: [shadcn/ui](https://ui.shadcn.com/) - Beautiful, accessible components
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - **Charts**: [Recharts](https://recharts.org/) - Composable chart library
