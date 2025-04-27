@@ -3,13 +3,13 @@ import connectToDatabase from '@/lib/mongodb';
 import { Budget } from '@/models/Budget';
 
 // GET route to fetch all budgets
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     // Connect to the database
     await connectToDatabase();
 
     // Get query parameters for filtering
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     const month = searchParams.get('month');
     const category = searchParams.get('category');
 

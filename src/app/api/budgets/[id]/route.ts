@@ -8,16 +8,15 @@ function isValidObjectId(id: string) {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
+type Params = { id: string };
+
 // GET route to fetch a single budget by ID
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, context: { params: Params }) {
   try {
     // Connect to the database
     await connectToDatabase();
 
-    const { id } = params;
+    const { id } = context.params;
     
     // Validate the ID format
     if (!isValidObjectId(id)) {
@@ -49,15 +48,12 @@ export async function GET(
 }
 
 // PUT route to update a budget
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, context: { params: Params }) {
   try {
     // Connect to the database
     await connectToDatabase();
     
-    const { id } = params;
+    const { id } = context.params;
     
     // Validate the ID format
     if (!isValidObjectId(id)) {
@@ -129,15 +125,12 @@ export async function PUT(
 }
 
 // DELETE route to remove a budget
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, context: { params: Params }) {
   try {
     // Connect to the database
     await connectToDatabase();
     
-    const { id } = params;
+    const { id } = context.params;
     
     // Validate the ID format
     if (!isValidObjectId(id)) {
