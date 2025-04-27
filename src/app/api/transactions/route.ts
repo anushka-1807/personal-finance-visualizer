@@ -46,12 +46,12 @@ export async function POST(request: NextRequest) {
     
     console.log('POST /api/transactions: Transaction created successfully', transaction);
     return NextResponse.json(transaction, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /api/transactions: Error creating transaction', error);
     
     // Check for validation errors
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map((err: any) => err.message);
+    if (error instanceof Error && 'name' in error && error.name === 'ValidationError' && 'errors' in error) {
+      const validationErrors = Object.values((error as {errors: {message: string}[]}).errors).map((err) => err.message);
       return NextResponse.json(
         { error: 'Validation failed', details: validationErrors },
         { status: 400 }
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
     
     return NextResponse.json(
-      { error: error.message || 'Failed to create transaction' },
+      { error: error instanceof Error ? error.message : 'Failed to create transaction' },
       { status: 500 }
     );
   }

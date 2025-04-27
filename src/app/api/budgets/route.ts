@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get('category');
 
     // Build query object based on provided filters
-    const query: any = {};
+    const query: Record<string, string> = {};
     if (month) query.month = month;
     if (category) query.category = category;
 

@@ -95,12 +95,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     
     console.log(`PUT /api/transactions/${id}: Transaction updated successfully`, transaction);
     return NextResponse.json(transaction);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`PUT /api/transactions/[id]: Error updating transaction`, error);
     
     // Check for validation errors
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map((err: any) => err.message);
+    if (error instanceof Error && 'name' in error && error.name === 'ValidationError' && 'errors' in error) {
+      const mongooseError = error as { errors: Record<string, { message: string }> };
+      const validationErrors = Object.values(mongooseError.errors).map(err => err.message);
       return NextResponse.json(
         { error: 'Validation failed', details: validationErrors },
         { status: 400 }
@@ -116,7 +117,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
     
     return NextResponse.json(
-      { error: error.message || 'Failed to update transaction' },
+      { error: error instanceof Error ? error.message : 'Failed to update transaction' },
       { status: 500 }
     );
   }

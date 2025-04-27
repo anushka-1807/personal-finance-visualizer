@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { TransactionCategory, TRANSACTION_CATEGORIES } from '@/models/Transaction';
+import { TransactionCategory } from '@/models/Transaction';
 import TransactionForm from '@/components/TransactionForm';
 import TransactionList from '@/components/TransactionList';
 import MonthlyExpensesChart from '@/components/MonthlyExpensesChart';
